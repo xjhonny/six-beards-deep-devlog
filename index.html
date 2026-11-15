@@ -1,0 +1,707 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Six Beards Deep: dev log</title>
+<meta name='description' content='How Six Beards Deep was made in four days for the 2026 Epic AI MegaJam: one person directing a crew of AI agents.'>
+<style>
+:root { --bg:#0b1220; --panel:#121c30; --ice:#cfe6ff; --ice2:#8fb4dc; --warm:#ffb84a; --text:#dbe6f3; --dim:#8a9bb3; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:17px/1.6 "Segoe UI", system-ui, sans-serif; }
+a { color: var(--warm); }
+h1, h2, h3 { font-family: Constantia, Georgia, "Times New Roman", serif; color: var(--ice); letter-spacing:.02em; }
+.hero { position:relative; min-height:62vh; display:flex; align-items:flex-end; background:#000 center/cover no-repeat; }
+.hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(11,18,32,.05) 40%, var(--bg)); }
+.hero .in { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:0 24px 32px; width:100%; }
+.hero img.logo { width:min(760px, 92vw); display:block; }
+.hero p { font-size:1.15rem; color:var(--ice2); margin:.4rem 0 1rem; }
+.btns a { display:inline-block; margin:0 10px 10px 0; padding:9px 16px; border:1px solid var(--warm); border-radius:6px;
+          text-decoration:none; background:rgba(255,184,74,.08); }
+main { max-width:1100px; margin:0 auto; padding:8px 24px 80px; }
+.lead { font-size:1.12rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin:24px 0; }
+.stat { background:var(--panel); border-radius:8px; padding:14px 16px; }
+.stat b { display:block; font-size:1.7rem; color:var(--warm); font-family:Constantia, Georgia, serif; }
+.pipe { background:var(--panel); border-radius:8px; padding:6px 20px; }
+.pipe li { margin:6px 0; }
+.shots { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin:16px 0 8px; }
+.shots img { width:100%; border-radius:6px; display:block; }
+.day { margin-top:56px; border-top:1px solid #22314d; padding-top:12px; }
+.entry { margin:22px 0; }
+.entry h3 { margin:0 0 4px; font-size:1.15rem; }
+.entry h3 small { color:var(--dim); font-weight:normal; margin-right:8px; font-family:"Segoe UI", sans-serif; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; margin-top:8px; }
+.grid a img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:5px; display:block; transition:transform .15s; }
+.grid a:hover img { transform:scale(1.03); }
+.grid a img[src$='.png'] { object-fit:contain; background:#f4f1ea; aspect-ratio:4/3; }
+details.commits { background:var(--panel); border-radius:8px; padding:8px 16px; margin-top:18px; }
+details.commits summary { cursor:pointer; color:var(--ice2); }
+details.commits li { color:var(--dim); font-size:.95rem; }
+details.commits li span { color:var(--ice2); font-variant-numeric:tabular-nums; margin-right:8px; }
+footer { color:var(--dim); text-align:center; padding:40px 24px; font-size:.95rem; }
+</style></head><body>
+<header class='hero' style="background-image:url('media/hero.jpg')"><div class='in'>
+<img class='logo' src='media/logo.png' alt='Six Beards Deep'>
+<p>A dev log: how a dwarf, six copies of himself and one shared brain cell were made in four days, solo, for the 2026 Epic AI MegaJam.</p>
+<div class='btns'><a href="#timeline">Jump to the timeline</a></div></div></header><main>
+<h2>How it was made</h2>
+<p class='lead'>Six Beards Deep is a game about <b>directing a crew</b>: you are one weak dwarf who makes copies of himself and gives them orders. It was made the same way it plays. One person, <b>llericop</b>, set the vision, played every build and decided what made the cut. A crew of AI tools did most of the work.</p>
+<ul class='pipe'>
+<li><b>Claude Code (Anthropic)</b>, an AI coding agent, drove the <b>Unreal Engine 5.8</b> editor through its built-in MCP server. It wrote the game's Blueprint logic (as text, compiled into Blueprint graphs by scripts), the cave generator, the materials, the HUD and menus, the narrator's script, the play-test scripts and the trailer edit, and it kept this log.</li>
+<li><b>ChatGPT / Codex (OpenAI)</b> made the 2D art: concept art, textures, UI and reference images.</li>
+<li><b>Tripo3D</b> turned those images into the 3D models. <b>Blender</b>, scripted, rigged them and made the animations.</li>
+<li><b>ElevenLabs</b> gave the narrator his voice (236 lines), made the 31 sound effects and the music.</li>
+</ul>
+<div class='stats'>
+<div class='stat'><b>4 days</b>Nov 12 to 15, 2026</div>
+<div class='stat'><b>123</b>commits</div>
+<div class='stat'><b>181</b>screenshots in this log</div>
+<div class='stat'><b>236</b>voiced narrator lines</div>
+<div class='stat'><b>6</b>copies of one dwarf</div>
+</div>
+<h2>The game</h2><div class='shots'>
+<a href='media/01_frozen_larder.jpg'><img src='media/01_frozen_larder.jpg' alt='' loading='lazy'></a>
+<a href='media/02_the_islands.jpg'><img src='media/02_the_islands.jpg' alt='' loading='lazy'></a>
+<a href='media/03_the_crew.jpg'><img src='media/03_the_crew.jpg' alt='' loading='lazy'></a>
+<a href='media/04_the_gauntlet.jpg'><img src='media/04_the_gauntlet.jpg' alt='' loading='lazy'></a>
+</div>
+<h2 id='timeline'>The timeline</h2>
+<p>Everything below is in the order it happened: the screenshots taken while it was being built (by the agent, to check its own work, or to show llericop), grouped by what was being worked on, and each day's commits. Click a picture for the full size.</p>
+<section class='day'><h2>2026-11-12</h2>
+<p>Before the first screenshots: the first greybox of the copy commands, the dwarf's gear and his face rig.</p>
+<details class='commits' open><summary>12 commits that day</summary><ul>
+<li><span>17:45</span>New controls and fixes: Shift run, Space jump/roll/climb, left-click attack, calm aiming strafes, no stale shadows</li>
+<li><span>18:28</span>Climb sideways and around towers, full-body attack, run by default, climb loop and shadow fixes</li>
+<li><span>20:24</span>Dwarf jog and sprint arms, pickaxe throw that sticks, hold-to-attack, helmet falls off</li>
+<li><span>20:54</span>Climb over ledges, slide down when idle on a wall, smaller copies that look ahead</li>
+<li><span>21:22</span>Copy personalities and a pickaxe that works loose from walls</li>
+<li><span>22:33</span>Copies climb with you, E orders, towers on a copy, climbing down</li>
+<li><span>23:00</span>Copies throw with you, dodge your aim by personality, hand over their pickaxe</li>
+<li><span>23:21</span>Copies notice what happens around them and react</li>
+<li><span>23:30</span>Friendly fire: pickaxes bounce off copies, who react by personality</li>
+<li><span>23:35</span>Copies hesitate at edges by personality and say goodbye before fading</li>
+<li><span>23:43</span>Barging dwarves shove copies aside</li>
+<li><span>23:55</span>Copies spot treasure and point it out; greybox crystal treasure</li>
+</ul></details>
+</section>
+<section class='day'><h2>2026-11-13</h2>
+<div class='entry'><h3><small>09:58</small>cave</h3>
+<p>The cave&#x27;s look, first production pass: displaced lattice blocks, the cave material, lighting, softened edges. One view after each change.</p>
+<div class='grid'>
+<a href='img/2026-11-13_095837_cave1.jpg'><img src='thumb/2026-11-13_095837_cave1.jpg' alt='2026-11-13_095837_cave1.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_100017_cave2.jpg'><img src='thumb/2026-11-13_100017_cave2.jpg' alt='2026-11-13_100017_cave2.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_100024_cave2c.jpg'><img src='thumb/2026-11-13_100024_cave2c.jpg' alt='2026-11-13_100024_cave2c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_100946_cave3.jpg'><img src='thumb/2026-11-13_100946_cave3.jpg' alt='2026-11-13_100946_cave3.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_100946_cave3c.jpg'><img src='thumb/2026-11-13_100946_cave3c.jpg' alt='2026-11-13_100946_cave3c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102055_cave4.jpg'><img src='thumb/2026-11-13_102055_cave4.jpg' alt='2026-11-13_102055_cave4.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102101_cave4c.jpg'><img src='thumb/2026-11-13_102101_cave4c.jpg' alt='2026-11-13_102101_cave4c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102142_cave5.jpg'><img src='thumb/2026-11-13_102142_cave5.jpg' alt='2026-11-13_102142_cave5.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102142_cave5c.jpg'><img src='thumb/2026-11-13_102142_cave5c.jpg' alt='2026-11-13_102142_cave5c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102242_cave6.jpg'><img src='thumb/2026-11-13_102242_cave6.jpg' alt='2026-11-13_102242_cave6.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102242_cave6c.jpg'><img src='thumb/2026-11-13_102242_cave6c.jpg' alt='2026-11-13_102242_cave6c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102337_cave7.jpg'><img src='thumb/2026-11-13_102337_cave7.jpg' alt='2026-11-13_102337_cave7.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102337_cave7c.jpg'><img src='thumb/2026-11-13_102337_cave7c.jpg' alt='2026-11-13_102337_cave7c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102940_cave8.jpg'><img src='thumb/2026-11-13_102940_cave8.jpg' alt='2026-11-13_102940_cave8.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_102952_cave8c.jpg'><img src='thumb/2026-11-13_102952_cave8c.jpg' alt='2026-11-13_102952_cave8c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104051_cave9.jpg'><img src='thumb/2026-11-13_104051_cave9.jpg' alt='2026-11-13_104051_cave9.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104123_cave9c.jpg'><img src='thumb/2026-11-13_104123_cave9c.jpg' alt='2026-11-13_104123_cave9c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104536_cave10.jpg'><img src='thumb/2026-11-13_104536_cave10.jpg' alt='2026-11-13_104536_cave10.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104537_cave10c.jpg'><img src='thumb/2026-11-13_104537_cave10c.jpg' alt='2026-11-13_104537_cave10c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104612_cave11.jpg'><img src='thumb/2026-11-13_104612_cave11.jpg' alt='2026-11-13_104612_cave11.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104613_cave11c.jpg'><img src='thumb/2026-11-13_104613_cave11c.jpg' alt='2026-11-13_104613_cave11c.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104708_cave12.jpg'><img src='thumb/2026-11-13_104708_cave12.jpg' alt='2026-11-13_104708_cave12.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_104711_cave12c.jpg'><img src='thumb/2026-11-13_104711_cave12c.jpg' alt='2026-11-13_104711_cave12c.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:14</small>slice</h3>
+<p>The first hand-built vertical slice, made after &quot;the game still feels boring&quot;: camp, lake, gap, ledge, ice shelf, exit.</p>
+<div class='grid'>
+<a href='img/2026-11-13_221439_slice_shots-camp.jpg'><img src='thumb/2026-11-13_221439_slice_shots-camp.jpg' alt='2026-11-13_221439_slice_shots-camp.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_221442_slice_shots-ledge.jpg'><img src='thumb/2026-11-13_221442_slice_shots-ledge.jpg' alt='2026-11-13_221442_slice_shots-ledge.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_221444_slice_shots-gap.jpg'><img src='thumb/2026-11-13_221444_slice_shots-gap.jpg' alt='2026-11-13_221444_slice_shots-gap.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_221446_slice_shots-shelf.jpg'><img src='thumb/2026-11-13_221446_slice_shots-shelf.jpg' alt='2026-11-13_221446_slice_shots-shelf.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_221448_slice_shots-lake.jpg'><img src='thumb/2026-11-13_221448_slice_shots-lake.jpg' alt='2026-11-13_221448_slice_shots-lake.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_221450_slice_shots-exit.jpg'><img src='thumb/2026-11-13_221450_slice_shots-exit.jpg' alt='2026-11-13_221450_slice_shots-exit.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:44</small>heist</h3>
+<p>The heist room: a balcony to look the room over from, guards that see, an idol to take.</p>
+<div class='grid'>
+<a href='img/2026-11-13_224429_heist_shots-balcony.jpg'><img src='thumb/2026-11-13_224429_heist_shots-balcony.jpg' alt='2026-11-13_224429_heist_shots-balcony.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_224442_heist_shots-seen.jpg'><img src='thumb/2026-11-13_224442_heist_shots-seen.jpg' alt='2026-11-13_224442_heist_shots-seen.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_224505_heist_shots-idol.jpg'><img src='thumb/2026-11-13_224505_heist_shots-idol.jpg' alt='2026-11-13_224505_heist_shots-idol.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:11</small>vault</h3>
+<p>The vault: guards that glimpse, grow suspicious, and raise the alarm.</p>
+<div class='grid'>
+<a href='img/2026-11-13_231136_vault_shots-balcony.jpg'><img src='thumb/2026-11-13_231136_vault_shots-balcony.jpg' alt='2026-11-13_231136_vault_shots-balcony.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_231152_vault_shots-glimpse.jpg'><img src='thumb/2026-11-13_231152_vault_shots-glimpse.jpg' alt='2026-11-13_231152_vault_shots-glimpse.jpg' loading='lazy'></a>
+<a href='img/2026-11-13_231211_vault_shots-alarm.jpg'><img src='thumb/2026-11-13_231211_vault_shots-alarm.jpg' alt='2026-11-13_231211_vault_shots-alarm.jpg' loading='lazy'></a>
+</div></div>
+<details class='commits'><summary>28 commits that day</summary><ul>
+<li><span>08:12</span>Copies lift, carry and heave rocks together</li>
+<li><span>09:13</span>Throw copies: pick one up yourself, or have the crew toss it</li>
+<li><span>10:15</span>Frozen cave: design, room generator and greybox maps</li>
+<li><span>10:15</span>Cave generated at run time in Blueprint; ice and thrown-copy rules</li>
+<li><span>10:27</span>Cave: digging, working plates and gates, terrain materials</li>
+<li><span>10:30</span>Cave things wear their models</li>
+<li><span>10:42</span>Cave: scatter pass and thin ice that breaks</li>
+<li><span>10:47</span>Cave: the Whiteout</li>
+<li><span>10:59</span>Cave: copy cap, gold and item boxes</li>
+<li><span>11:02</span>Cave: a run of four levels</li>
+<li><span>11:12</span>Cave: icicles fall, cold vents freeze</li>
+<li><span>14:03</span>Cave art: 49 props in game, rocks, a lantern to hit, frozen dwarfs</li>
+<li><span>15:19</span>Cave: carved blocks, lighting, edges; the plan for the next pass</li>
+<li><span>16:24</span>Cave: 3D levels made offline, loaded by BP_Cave</li>
+<li><span>18:02</span>Cave: rounded rock surface from shapes baked with each level</li>
+<li><span>18:29</span>Cave: landmark crystals, bats, loading cover, nav over whole level</li>
+<li><span>19:38</span>Cave: biomes with their own colour, light, dressing and moving air</li>
+<li><span>19:54</span>Cave: throwable flare-stone; motes no longer dirty navigation</li>
+<li><span>20:08</span>Cave: 37.6 -&gt; 108.9 fps in play</li>
+<li><span>20:14</span>Cave: no frame drops when turning the view</li>
+<li><span>20:39</span>Cave: floors keep to their collision; climbing over never wedges</li>
+<li><span>21:02</span>Cave: dug holes stay sealed</li>
+<li><span>21:30</span>Cave: flares come back, solid dressing, calmer seams, stone on the hip</li>
+<li><span>21:45</span>Cave: drips and sifting snow</li>
+<li><span>22:00</span>Copies climb after the player when following</li>
+<li><span>22:16</span>Cave: a hand-built vertical slice to play (Lvl_Slice)</li>
+<li><span>22:46</span>Cave: a heist slice with creatures that hear and hunt (Lvl_Heist)</li>
+<li><span>23:13</span>Cave: harder creature rules and a hard heist room (Lvl_Vault)</li>
+</ul></details>
+</section>
+<section class='day'><h2>2026-11-14</h2>
+<div class='entry'><h3><small>00:00</small>den</h3>
+<p>The den: a sleeping brute, a guard frozen on a cold vent, the vault behind.</p>
+<div class='grid'>
+<a href='img/2026-11-14_000013_den_shots-frozen.jpg'><img src='thumb/2026-11-14_000013_den_shots-frozen.jpg' alt='2026-11-14_000013_den_shots-frozen.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_000017_den_shots-vault.jpg'><img src='thumb/2026-11-14_000017_den_shots-vault.jpg' alt='2026-11-14_000017_den_shots-vault.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_000025_den_shots-brute.jpg'><img src='thumb/2026-11-14_000025_den_shots-brute.jpg' alt='2026-11-14_000025_den_shots-brute.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>00:24</small>hoard</h3>
+<p>The hoard: the heavy idol that takes three copies to carry.</p>
+<div class='grid'>
+<a href='img/2026-11-14_002440_hoard_shots-start.jpg'><img src='thumb/2026-11-14_002440_hoard_shots-start.jpg' alt='2026-11-14_002440_hoard_shots-start.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_002442_hoard_shots-idol.jpg'><img src='thumb/2026-11-14_002442_hoard_shots-idol.jpg' alt='2026-11-14_002442_hoard_shots-idol.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>00:35</small>vent</h3>
+<p>The cold vent, and making it findable in the dark (model, size, a cold light).</p>
+<div class='grid'>
+<a href='img/2026-11-14_003549_vent_near.jpg'><img src='thumb/2026-11-14_003549_vent_near.jpg' alt='2026-11-14_003549_vent_near.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_003551_vent_far.jpg'><img src='thumb/2026-11-14_003551_vent_far.jpg' alt='2026-11-14_003551_vent_far.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_003921_vent2_near.jpg'><img src='thumb/2026-11-14_003921_vent2_near.jpg' alt='2026-11-14_003921_vent2_near.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_003922_vent2_far.jpg'><img src='thumb/2026-11-14_003922_vent2_far.jpg' alt='2026-11-14_003922_vent2_far.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_004006_vent3_near.jpg'><img src='thumb/2026-11-14_004006_vent3_near.jpg' alt='2026-11-14_004006_vent3_near.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_004008_vent3_side.jpg'><img src='thumb/2026-11-14_004008_vent3_side.jpg' alt='2026-11-14_004008_vent3_side.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>10:06</small>yard</h3>
+<p>The yard: one of everything, the base the rest was built on. Start and end-of-room tally.</p>
+<div class='grid'>
+<a href='img/2026-11-14_100637_yard_shots-start.jpg'><img src='thumb/2026-11-14_100637_yard_shots-start.jpg' alt='2026-11-14_100637_yard_shots-start.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_100649_yard_shots-tally.jpg'><img src='thumb/2026-11-14_100649_yard_shots-tally.jpg' alt='2026-11-14_100649_yard_shots-tally.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>10:44</small>crew</h3>
+<p>The crew of six: named copies with a colour each, a ring of them distracting, the crew list drawn on the HUD.</p>
+<div class='grid'>
+<a href='img/2026-11-14_104401_crew_shots-crew.jpg'><img src='thumb/2026-11-14_104401_crew_shots-crew.jpg' alt='2026-11-14_104401_crew_shots-crew.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_104418_crew_shots-distract.jpg'><img src='thumb/2026-11-14_104418_crew_shots-distract.jpg' alt='2026-11-14_104418_crew_shots-distract.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_104429_crew_shots-drawn.jpg'><img src='thumb/2026-11-14_104429_crew_shots-drawn.jpg' alt='2026-11-14_104429_crew_shots-drawn.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>12:26</small>hud</h3>
+<p>The HUD for the crew, second pass.</p>
+<div class='grid'>
+<a href='img/2026-11-14_122637_hud_shots-crew.jpg'><img src='thumb/2026-11-14_122637_hud_shots-crew.jpg' alt='2026-11-14_122637_hud_shots-crew.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_122653_hud_shots-distract.jpg'><img src='thumb/2026-11-14_122653_hud_shots-distract.jpg' alt='2026-11-14_122653_hud_shots-distract.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_122704_hud_shots-drawn.jpg'><img src='thumb/2026-11-14_122704_hud_shots-drawn.jpg' alt='2026-11-14_122704_hud_shots-drawn.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>12:30</small>dance</h3>
+<p>Each personality&#x27;s own dance, used to distract.</p>
+<div class='grid'>
+<a href='img/2026-11-14_123027_dance_shots-crew.jpg'><img src='thumb/2026-11-14_123027_dance_shots-crew.jpg' alt='2026-11-14_123027_dance_shots-crew.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_123043_dance_shots-distract.jpg'><img src='thumb/2026-11-14_123043_dance_shots-distract.jpg' alt='2026-11-14_123043_dance_shots-distract.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_123054_dance_shots-drawn.jpg'><img src='thumb/2026-11-14_123054_dance_shots-drawn.jpg' alt='2026-11-14_123054_dance_shots-drawn.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>12:38</small>dance</h3>
+<p>Each personality&#x27;s own dance, used to distract.</p>
+<div class='grid'>
+<a href='img/2026-11-14_123805_dance_0.jpg'><img src='thumb/2026-11-14_123805_dance_0.jpg' alt='2026-11-14_123805_dance_0.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_123806_dance_1.jpg'><img src='thumb/2026-11-14_123806_dance_1.jpg' alt='2026-11-14_123806_dance_1.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_123807_dance_2.jpg'><img src='thumb/2026-11-14_123807_dance_2.jpg' alt='2026-11-14_123807_dance_2.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:30</small>aim</h3>
+<p>Pointing: a ring in the world on what the crosshair is on, its name under the crosshair, the shoulder camera for aiming, and the helping hand that pulls a copy up a ledge.</p>
+<div class='grid'>
+<a href='img/2026-11-14_133004_aim-point_guard.jpg'><img src='thumb/2026-11-14_133004_aim-point_guard.jpg' alt='2026-11-14_133004_aim-point_guard.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141811_aim-aiming.jpg'><img src='thumb/2026-11-14_141811_aim-aiming.jpg' alt='2026-11-14_141811_aim-aiming.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141823_aim-point_ahead.jpg'><img src='thumb/2026-11-14_141823_aim-point_ahead.jpg' alt='2026-11-14_141823_aim-point_ahead.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141825_aim-point_brute.jpg'><img src='thumb/2026-11-14_141825_aim-point_brute.jpg' alt='2026-11-14_141825_aim-point_brute.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141832_aim-hand_before.jpg'><img src='thumb/2026-11-14_141832_aim-hand_before.jpg' alt='2026-11-14_141832_aim-hand_before.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141833_aim-hand_pull.jpg'><img src='thumb/2026-11-14_141833_aim-hand_pull.jpg' alt='2026-11-14_141833_aim-hand_pull.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141843_aim-hand_after.jpg'><img src='thumb/2026-11-14_141843_aim-hand_after.jpg' alt='2026-11-14_141843_aim-hand_after.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:19</small>menu</h3>
+<p>The E menu: what the copies can do to the thing pointed at (toss, tower, distract, carry).</p>
+<div class='grid'>
+<a href='img/2026-11-14_141915_menu-toss.jpg'><img src='thumb/2026-11-14_141915_menu-toss.jpg' alt='2026-11-14_141915_menu-toss.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141929_menu-tower.jpg'><img src='thumb/2026-11-14_141929_menu-tower.jpg' alt='2026-11-14_141929_menu-tower.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_141949_menu-tower_hand.jpg'><img src='thumb/2026-11-14_141949_menu-tower_hand.jpg' alt='2026-11-14_141949_menu-tower_hand.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_142000_menu-distract.jpg'><img src='thumb/2026-11-14_142000_menu-distract.jpg' alt='2026-11-14_142000_menu-distract.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_142020_menu-carry.jpg'><img src='thumb/2026-11-14_142020_menu-carry.jpg' alt='2026-11-14_142020_menu-carry.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>15:48</small>pit</h3>
+<p>A bug llericop found: blocks in a pit drawn see-through. Four views of the fix.</p>
+<div class='grid'>
+<a href='img/2026-11-14_154811_pit-east.jpg'><img src='thumb/2026-11-14_154811_pit-east.jpg' alt='2026-11-14_154811_pit-east.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_154814_pit-west.jpg'><img src='thumb/2026-11-14_154814_pit-west.jpg' alt='2026-11-14_154814_pit-west.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_154816_pit-north.jpg'><img src='thumb/2026-11-14_154816_pit-north.jpg' alt='2026-11-14_154816_pit-north.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_154818_pit-south.jpg'><img src='thumb/2026-11-14_154818_pit-south.jpg' alt='2026-11-14_154818_pit-south.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>16:11</small>pick</h3>
+<p>Picking one copy, the carry menu, thrown pickaxes, digging ore, a tunnel one block high.</p>
+<div class='grid'>
+<a href='img/2026-11-14_161117_pick-dig_in.jpg'><img src='thumb/2026-11-14_161117_pick-dig_in.jpg' alt='2026-11-14_161117_pick-dig_in.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161142_pick-dig_ore.jpg'><img src='thumb/2026-11-14_161142_pick-dig_ore.jpg' alt='2026-11-14_161142_pick-dig_ore.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161142_pick-hall.jpg'><img src='thumb/2026-11-14_161142_pick-hall.jpg' alt='2026-11-14_161142_pick-hall.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161146_pick-keys.jpg'><img src='thumb/2026-11-14_161146_pick-keys.jpg' alt='2026-11-14_161146_pick-keys.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161154_pick-picked.jpg'><img src='thumb/2026-11-14_161154_pick-picked.jpg' alt='2026-11-14_161154_pick-picked.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161212_pick-carry_menu.jpg'><img src='thumb/2026-11-14_161212_pick-carry_menu.jpg' alt='2026-11-14_161212_pick-carry_menu.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_161305_pick-axes.jpg'><img src='thumb/2026-11-14_161305_pick-axes.jpg' alt='2026-11-14_161305_pick-axes.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>18:08</small>rim</h3>
+<p>A soft outline on what can be used, a throw range that matters, copies that refuse a brute and pile on it.</p>
+<div class='grid'>
+<a href='img/2026-11-14_180826_rim-rim_brute.jpg'><img src='thumb/2026-11-14_180826_rim-rim_brute.jpg' alt='2026-11-14_180826_rim-rim_brute.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_181449_rim-too_far.jpg'><img src='thumb/2026-11-14_181449_rim-too_far.jpg' alt='2026-11-14_181449_rim-too_far.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_181454_rim-rim_rock.jpg'><img src='thumb/2026-11-14_181454_rim-rim_rock.jpg' alt='2026-11-14_181454_rim-rim_rock.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_181457_rim-rim_gold.jpg'><img src='thumb/2026-11-14_181457_rim-rim_gold.jpg' alt='2026-11-14_181457_rim-rim_gold.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_181531_rim-mob.jpg'><img src='thumb/2026-11-14_181531_rim-mob.jpg' alt='2026-11-14_181531_rim-mob.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>18:32</small>jam</h3>
+<p>The jam&#x27;s three rooms, shaped like caves instead of boxes: the start and the idol of each.</p>
+<div class='grid'>
+<a href='img/2026-11-14_183218_jam-jam2_start.jpg'><img src='thumb/2026-11-14_183218_jam-jam2_start.jpg' alt='2026-11-14_183218_jam-jam2_start.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_183224_jam-jam2_idol.jpg'><img src='thumb/2026-11-14_183224_jam-jam2_idol.jpg' alt='2026-11-14_183224_jam-jam2_idol.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_183236_jam-jam3_start.jpg'><img src='thumb/2026-11-14_183236_jam-jam3_start.jpg' alt='2026-11-14_183236_jam-jam3_start.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_183244_jam-jam3_idol.jpg'><img src='thumb/2026-11-14_183244_jam-jam3_idol.jpg' alt='2026-11-14_183244_jam-jam3_idol.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_185655_jam-jam1_start.jpg'><img src='thumb/2026-11-14_185655_jam-jam1_start.jpg' alt='2026-11-14_185655_jam-jam1_start.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_185704_jam-jam1_idol.jpg'><img src='thumb/2026-11-14_185704_jam-jam1_idol.jpg' alt='2026-11-14_185704_jam-jam1_idol.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>19:41</small>sub</h3>
+<p>The narrator&#x27;s first subtitle.</p>
+<div class='grid'>
+<a href='img/2026-11-14_194108_sub.jpg'><img src='thumb/2026-11-14_194108_sub.jpg' alt='2026-11-14_194108_sub.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:15</small>lift</h3>
+<p>The exit lift: its model, its cage, and the ride up.</p>
+<div class='grid'>
+<a href='img/2026-11-14_211557_lift.jpg'><img src='thumb/2026-11-14_211557_lift.jpg' alt='2026-11-14_211557_lift.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:30</small>plate</h3>
+<p>The pressure plate and its light; the helper line of keys under the subtitle.</p>
+<div class='grid'>
+<a href='img/2026-11-14_213015_plate.jpg'><img src='thumb/2026-11-14_213015_plate.jpg' alt='2026-11-14_213015_plate.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:31</small>lift</h3>
+<p>The exit lift: its model, its cage, and the ride up.</p>
+<div class='grid'>
+<a href='img/2026-11-14_213106_lift0.jpg'><img src='thumb/2026-11-14_213106_lift0.jpg' alt='2026-11-14_213106_lift0.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_213107_lift1.jpg'><img src='thumb/2026-11-14_213107_lift1.jpg' alt='2026-11-14_213107_lift1.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:31</small>aim</h3>
+<p>Aiming the pickaxe at the guard under the icicles, intro room.</p>
+<div class='grid'>
+<a href='img/2026-11-14_213156_aim.jpg'><img src='thumb/2026-11-14_213156_aim.jpg' alt='2026-11-14_213156_aim.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:32</small>tower</h3>
+<p>The intro room&#x27;s ice wall: a tower of copies against it.</p>
+<div class='grid'>
+<a href='img/2026-11-14_213205_tower0.jpg'><img src='thumb/2026-11-14_213205_tower0.jpg' alt='2026-11-14_213205_tower0.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_213211_tower1.jpg'><img src='thumb/2026-11-14_213211_tower1.jpg' alt='2026-11-14_213211_tower1.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:33</small>plate</h3>
+<p>The pressure plate and its light; the helper line of keys under the subtitle.</p>
+<div class='grid'>
+<a href='img/2026-11-14_213330_plate2.jpg'><img src='thumb/2026-11-14_213330_plate2.jpg' alt='2026-11-14_213330_plate2.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:43</small>fallen</h3>
+<p>Fallen icicles, point down, with splinters.</p>
+<div class='grid'>
+<a href='img/2026-11-14_214309_fallen.jpg'><img src='thumb/2026-11-14_214309_fallen.jpg' alt='2026-11-14_214309_fallen.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:56</small>aim</h3>
+<p>Aiming the pickaxe at the guard under the icicles, intro room.</p>
+<div class='grid'>
+<a href='img/2026-11-14_215600_aim.jpg'><img src='thumb/2026-11-14_215600_aim.jpg' alt='2026-11-14_215600_aim.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>21:56</small>tower</h3>
+<p>The intro room&#x27;s ice wall: a tower of copies against it.</p>
+<div class='grid'>
+<a href='img/2026-11-14_215610_tower0.jpg'><img src='thumb/2026-11-14_215610_tower0.jpg' alt='2026-11-14_215610_tower0.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_215616_tower1.jpg'><img src='thumb/2026-11-14_215616_tower1.jpg' alt='2026-11-14_215616_tower1.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:00</small>breath</h3>
+<div class='grid'>
+<a href='img/2026-11-14_220011_breath.jpg'><img src='thumb/2026-11-14_220011_breath.jpg' alt='2026-11-14_220011_breath.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:06</small>walk</h3>
+<div class='grid'>
+<a href='img/2026-11-14_220603_walk0.jpg'><img src='thumb/2026-11-14_220603_walk0.jpg' alt='2026-11-14_220603_walk0.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_220604_walk1.jpg'><img src='thumb/2026-11-14_220604_walk1.jpg' alt='2026-11-14_220604_walk1.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:06</small>brute_sleep</h3>
+<div class='grid'>
+<a href='img/2026-11-14_220607_brute_sleep.jpg'><img src='thumb/2026-11-14_220607_brute_sleep.jpg' alt='2026-11-14_220607_brute_sleep.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:33</small>niche_aim</h3>
+<div class='grid'>
+<a href='img/2026-11-14_223331_niche_aim.jpg'><img src='thumb/2026-11-14_223331_niche_aim.jpg' alt='2026-11-14_223331_niche_aim.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:33</small>crew</h3>
+<div class='grid'>
+<a href='img/2026-11-14_223343_crew.jpg'><img src='thumb/2026-11-14_223343_crew.jpg' alt='2026-11-14_223343_crew.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:34</small>item_menu</h3>
+<div class='grid'>
+<a href='img/2026-11-14_223401_item_menu.jpg'><img src='thumb/2026-11-14_223401_item_menu.jpg' alt='2026-11-14_223401_item_menu.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:34</small>crew_used</h3>
+<div class='grid'>
+<a href='img/2026-11-14_223405_crew_used.jpg'><img src='thumb/2026-11-14_223405_crew_used.jpg' alt='2026-11-14_223405_crew_used.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:36</small>niche_aim</h3>
+<div class='grid'>
+<a href='img/2026-11-14_223657_niche_aim.jpg'><img src='thumb/2026-11-14_223657_niche_aim.jpg' alt='2026-11-14_223657_niche_aim.jpg' loading='lazy'></a>
+<a href='img/2026-11-14_223814_niche_aim.jpg'><img src='thumb/2026-11-14_223814_niche_aim.jpg' alt='2026-11-14_223814_niche_aim.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:58</small>crevasse</h3>
+<div class='grid'>
+<a href='img/2026-11-14_225820_crevasse.jpg'><img src='thumb/2026-11-14_225820_crevasse.jpg' alt='2026-11-14_225820_crevasse.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>22:58</small>grab_hint</h3>
+<div class='grid'>
+<a href='img/2026-11-14_225828_grab_hint.jpg'><img src='thumb/2026-11-14_225828_grab_hint.jpg' alt='2026-11-14_225828_grab_hint.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:14</small>helpbox</h3>
+<div class='grid'>
+<a href='img/2026-11-14_231459_helpbox.jpg'><img src='thumb/2026-11-14_231459_helpbox.jpg' alt='2026-11-14_231459_helpbox.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:15</small>stink_cloud</h3>
+<div class='grid'>
+<a href='img/2026-11-14_231507_stink_cloud.jpg'><img src='thumb/2026-11-14_231507_stink_cloud.jpg' alt='2026-11-14_231507_stink_cloud.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:52</small>helpbox_boulder</h3>
+<div class='grid'>
+<a href='img/2026-11-14_235255_helpbox_boulder.jpg'><img src='thumb/2026-11-14_235255_helpbox_boulder.jpg' alt='2026-11-14_235255_helpbox_boulder.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:53</small>helpbox_carrying</h3>
+<div class='grid'>
+<a href='img/2026-11-14_235304_helpbox_carrying.jpg'><img src='thumb/2026-11-14_235304_helpbox_carrying.jpg' alt='2026-11-14_235304_helpbox_carrying.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:53</small>helpbox_item</h3>
+<div class='grid'>
+<a href='img/2026-11-14_235340_helpbox_item.jpg'><img src='thumb/2026-11-14_235340_helpbox_item.jpg' alt='2026-11-14_235340_helpbox_item.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>23:53</small>stink_cloud</h3>
+<div class='grid'>
+<a href='img/2026-11-14_235344_stink_cloud.jpg'><img src='thumb/2026-11-14_235344_stink_cloud.jpg' alt='2026-11-14_235344_stink_cloud.jpg' loading='lazy'></a>
+</div></div>
+<details class='commits'><summary>34 commits that day</summary><ul>
+<li><span>00:05</span>Cave: things that act on each other, and a trap room (Lvl_Den)</li>
+<li><span>00:05</span>Cave design: what was checked in the trap room, and what is still missing</li>
+<li><span>00:25</span>Cave: the heavy idol, a stock of copies, a sealed vault (Lvl_Hoard)</li>
+<li><span>00:40</span>Cave: a cold vent is shown at the size that freezes, with a cold light over it</li>
+<li><span>10:07</span>Cave: the hauling recipe for one player, and a yard to try it in</li>
+<li><span>10:47</span>Cave: a named crew, an E menu that depends on the target, distract, dodging</li>
+<li><span>11:56</span>Cave: an ambush that works, a toss that needs no aiming, a wheel that waits</li>
+<li><span>12:23</span>Cave: backpack items, copies that mind themselves, more for the E menu</li>
+<li><span>12:54</span>Cave: a crew list on screen, a dance, climbing by personality, tidying</li>
+<li><span>13:54</span>Cave: a pointer in the world, throws that follow the aim, a hand up a ledge</li>
+<li><span>14:23</span>Cave: a jig for each of the six, menu orders that reach busy copies, tests at full speed</li>
+<li><span>15:35</span>Cave: a picked copy you can see, a carry menu, axes from the menu, a dwarf that fits a tunnel</li>
+<li><span>16:43</span>Cave: the yard&#x27;s roof and pit walls are drawn, a stun that holds, number keys for the crew</li>
+<li><span>16:43</span>Cave: M_CavePick as the setup script last saved it</li>
+<li><span>17:33</span>Cave: number keys that only do one thing, a menu on a copy, a lift that does not wait for a quitter</li>
+<li><span>17:33</span>Cave: BP_CaveAim as the setup script last saved it</li>
+<li><span>17:39</span>Cave: only copies that can walk to a thing are called to lift it</li>
+<li><span>18:15</span>Cave: a soft outline on what can be used, a throw range that matters, copies that refuse a brute</li>
+<li><span>18:33</span>Cave: three jam rooms that look like caves, played one after another</li>
+<li><span>18:45</span>Cave: room 1 with a crevasse that keeps what falls in, and ways to lose a room</li>
+<li><span>18:57</span>Cave: room 1 as a place to make plans in</li>
+<li><span>19:42</span>Cave: a narrator with subtitles, who nudges when the player is stuck</li>
+<li><span>21:04</span>Cave: an intro room, posted copies that stay, carriers that can be sent</li>
+<li><span>21:34</span>Cave: a helper line for keys, a tower lesson, a gate that slides, a lift to ride</li>
+<li><span>21:43</span>Cave: icicles that stay point down, a carry order that is obeyed, creatures that move</li>
+<li><span>21:46</span>Devlog: the screenshots taken while building the game, kept and indexed</li>
+<li><span>21:57</span>Cave: the intro room&#x27;s item lesson, said plainly</li>
+<li><span>22:00</span>Cave: creatures breathe mist in the cold and raise dust when they run</li>
+<li><span>22:06</span>Cave: creatures with skeletons that walk, idle and sleep</li>
+<li><span>22:16</span>Cave: guards content after one catch, and a walk without the fits</li>
+<li><span>22:41</span>Cave: a longer intro room, items shown and used once, a ring for every noise</li>
+<li><span>22:58</span>Cave: a plate that stays down, lures that reach deaf guards, a deep crevasse</li>
+<li><span>23:15</span>Cave: a helper box that can be read, a stink bomb that can be seen, carriers that set off at once</li>
+<li><span>23:54</span>Cave: a posted copy keeps its post</li>
+</ul></details>
+</section>
+<section class='day'><h2>2026-11-15</h2>
+<div class='entry'><h3><small>00:20</small>pantry</h3>
+<div class='grid'>
+<a href='img/2026-11-15_002047_pantry.jpg'><img src='thumb/2026-11-15_002047_pantry.jpg' alt='2026-11-15_002047_pantry.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>00:31</small>shadows</h3>
+<div class='grid'>
+<a href='img/2026-11-15_003147_shadows.jpg'><img src='thumb/2026-11-15_003147_shadows.jpg' alt='2026-11-15_003147_shadows.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>00:51</small>throw_menu</h3>
+<div class='grid'>
+<a href='img/2026-11-15_005152_throw_menu.jpg'><img src='thumb/2026-11-15_005152_throw_menu.jpg' alt='2026-11-15_005152_throw_menu.jpg' loading='lazy'></a>
+<a href='img/2026-11-15_005407_throw_menu.jpg'><img src='thumb/2026-11-15_005407_throw_menu.jpg' alt='2026-11-15_005407_throw_menu.jpg' loading='lazy'></a>
+<a href='img/2026-11-15_005542_throw_menu.jpg'><img src='thumb/2026-11-15_005542_throw_menu.jpg' alt='2026-11-15_005542_throw_menu.jpg' loading='lazy'></a>
+<a href='img/2026-11-15_005627_throw_menu.jpg'><img src='thumb/2026-11-15_005627_throw_menu.jpg' alt='2026-11-15_005627_throw_menu.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:14</small>hud_card</h3>
+<div class='grid'>
+<a href='img/2026-11-15_021419_hud_card.jpg'><img src='thumb/2026-11-15_021419_hud_card.jpg' alt='2026-11-15_021419_hud_card.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:17</small>hud_start</h3>
+<div class='grid'>
+<a href='img/2026-11-15_021700_hud_start.jpg'><img src='thumb/2026-11-15_021700_hud_start.jpg' alt='2026-11-15_021700_hud_start.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:17</small>hud_roster</h3>
+<div class='grid'>
+<a href='img/2026-11-15_021707_hud_roster1.jpg'><img src='thumb/2026-11-15_021707_hud_roster1.jpg' alt='2026-11-15_021707_hud_roster1.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:17</small>hud_verbs</h3>
+<div class='grid'>
+<a href='img/2026-11-15_021714_hud_verbs.jpg'><img src='thumb/2026-11-15_021714_hud_verbs.jpg' alt='2026-11-15_021714_hud_verbs.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:17</small>hud_emenu</h3>
+<div class='grid'>
+<a href='img/2026-11-15_021715_hud_emenu.jpg'><img src='thumb/2026-11-15_021715_hud_emenu.jpg' alt='2026-11-15_021715_hud_emenu.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:20</small>crew_portraits</h3>
+<div class='grid'>
+<a href='img/2026-11-15_022023_crew_portraits.jpg'><img src='thumb/2026-11-15_022023_crew_portraits.jpg' alt='2026-11-15_022023_crew_portraits.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:39</small>hud_verbs</h3>
+<div class='grid'>
+<a href='img/2026-11-15_023941_hud_verbs.jpg'><img src='thumb/2026-11-15_023941_hud_verbs.jpg' alt='2026-11-15_023941_hud_verbs.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:39</small>hud_emenu</h3>
+<div class='grid'>
+<a href='img/2026-11-15_023942_hud_emenu.jpg'><img src='thumb/2026-11-15_023942_hud_emenu.jpg' alt='2026-11-15_023942_hud_emenu.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:56</small>grab_near</h3>
+<div class='grid'>
+<a href='img/2026-11-15_025635_grab_near.jpg'><img src='thumb/2026-11-15_025635_grab_near.jpg' alt='2026-11-15_025635_grab_near.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>02:56</small>grab_held</h3>
+<div class='grid'>
+<a href='img/2026-11-15_025637_grab_held.jpg'><img src='thumb/2026-11-15_025637_grab_held.jpg' alt='2026-11-15_025637_grab_held.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>03:04</small>item_rock_dozer</h3>
+<div class='grid'>
+<a href='img/2026-11-15_030424_item_rock_dozer.jpg'><img src='thumb/2026-11-15_030424_item_rock_dozer.jpg' alt='2026-11-15_030424_item_rock_dozer.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>03:04</small>item_firework</h3>
+<div class='grid'>
+<a href='img/2026-11-15_030425_item_firework.jpg'><img src='thumb/2026-11-15_030425_item_firework.jpg' alt='2026-11-15_030425_item_firework.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>10:50</small>test_1_menu</h3>
+<div class='grid'>
+<a href='img/2026-11-15_105026_test_1_menu.jpg'><img src='thumb/2026-11-15_105026_test_1_menu.jpg' alt='2026-11-15_105026_test_1_menu.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>10:50</small>test_2_rooms</h3>
+<div class='grid'>
+<a href='img/2026-11-15_105030_test_2_rooms.jpg'><img src='thumb/2026-11-15_105030_test_2_rooms.jpg' alt='2026-11-15_105030_test_2_rooms.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>11:26</small>pause</h3>
+<div class='grid'>
+<a href='img/2026-11-15_112608_pause_0.jpg'><img src='thumb/2026-11-15_112608_pause_0.jpg' alt='2026-11-15_112608_pause_0.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>11:26</small>pause_1_controls</h3>
+<div class='grid'>
+<a href='img/2026-11-15_112612_pause_1_controls.jpg'><img src='thumb/2026-11-15_112612_pause_1_controls.jpg' alt='2026-11-15_112612_pause_1_controls.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>11:26</small>hud_keys</h3>
+<div class='grid'>
+<a href='img/2026-11-15_112638_hud_keys.jpg'><img src='thumb/2026-11-15_112638_hud_keys.jpg' alt='2026-11-15_112638_hud_keys.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>12:25</small>room2_new</h3>
+<div class='grid'>
+<a href='img/2026-11-15_122538_room2_new.jpg'><img src='thumb/2026-11-15_122538_room2_new.jpg' alt='2026-11-15_122538_room2_new.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>12:25</small>room3_new</h3>
+<div class='grid'>
+<a href='img/2026-11-15_122552_room3_new.jpg'><img src='thumb/2026-11-15_122552_room3_new.jpg' alt='2026-11-15_122552_room3_new.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:27</small>packaged_title_s</h3>
+<div class='grid'>
+<a href='img/2026-11-15_132740_packaged_title_s.jpg'><img src='thumb/2026-11-15_132740_packaged_title_s.jpg' alt='2026-11-15_132740_packaged_title_s.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:28</small>room2_look</h3>
+<div class='grid'>
+<a href='img/2026-11-15_132850_room2_look.jpg'><img src='thumb/2026-11-15_132850_room2_look.jpg' alt='2026-11-15_132850_room2_look.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:29</small>room3_look</h3>
+<div class='grid'>
+<a href='img/2026-11-15_132906_room3_look.jpg'><img src='thumb/2026-11-15_132906_room3_look.jpg' alt='2026-11-15_132906_room3_look.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:39</small>room2_atmos</h3>
+<div class='grid'>
+<a href='img/2026-11-15_133930_room2_atmos3.jpg'><img src='thumb/2026-11-15_133930_room2_atmos3.jpg' alt='2026-11-15_133930_room2_atmos3.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>13:57</small>beam</h3>
+<div class='grid'>
+<a href='img/2026-11-15_135727_beam_0.jpg'><img src='thumb/2026-11-15_135727_beam_0.jpg' alt='2026-11-15_135727_beam_0.jpg' loading='lazy'></a>
+<a href='img/2026-11-15_141024_beam_0.jpg'><img src='thumb/2026-11-15_141024_beam_0.jpg' alt='2026-11-15_141024_beam_0.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:11</small>room1_fx</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141133_room1_fx.jpg'><img src='thumb/2026-11-15_141133_room1_fx.jpg' alt='2026-11-15_141133_room1_fx.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:11</small>room2_fx</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141149_room2_fx.jpg'><img src='thumb/2026-11-15_141149_room2_fx.jpg' alt='2026-11-15_141149_room2_fx.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:12</small>room3_fx</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141206_room3_fx.jpg'><img src='thumb/2026-11-15_141206_room3_fx.jpg' alt='2026-11-15_141206_room3_fx.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:18</small>room1_biome</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141855_room1_biome.jpg'><img src='thumb/2026-11-15_141855_room1_biome.jpg' alt='2026-11-15_141855_room1_biome.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:19</small>room2_biome</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141911_room2_biome.jpg'><img src='thumb/2026-11-15_141911_room2_biome.jpg' alt='2026-11-15_141911_room2_biome.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:19</small>room3_biome</h3>
+<div class='grid'>
+<a href='img/2026-11-15_141929_room3_biome.jpg'><img src='thumb/2026-11-15_141929_room3_biome.jpg' alt='2026-11-15_141929_room3_biome.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:21</small>room2_frost</h3>
+<div class='grid'>
+<a href='img/2026-11-15_142152_room2_frost.jpg'><img src='thumb/2026-11-15_142152_room2_frost.jpg' alt='2026-11-15_142152_room2_frost.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:22</small>room3_frost</h3>
+<div class='grid'>
+<a href='img/2026-11-15_142209_room3_frost.jpg'><img src='thumb/2026-11-15_142209_room3_frost.jpg' alt='2026-11-15_142209_room3_frost.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:24</small>room1_frost</h3>
+<div class='grid'>
+<a href='img/2026-11-15_142441_room1_frost38.jpg'><img src='thumb/2026-11-15_142441_room1_frost38.jpg' alt='2026-11-15_142441_room1_frost38.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>14:39</small>end_screen</h3>
+<div class='grid'>
+<a href='img/2026-11-15_143924_end_screen.jpg'><img src='thumb/2026-11-15_143924_end_screen.jpg' alt='2026-11-15_143924_end_screen.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>15:01</small>room2_rock</h3>
+<div class='grid'>
+<a href='img/2026-11-15_150118_room2_rock2.jpg'><img src='thumb/2026-11-15_150118_room2_rock2.jpg' alt='2026-11-15_150118_room2_rock2.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>15:02</small>room1_rock</h3>
+<div class='grid'>
+<a href='img/2026-11-15_150220_room1_rock3.jpg'><img src='thumb/2026-11-15_150220_room1_rock3.jpg' alt='2026-11-15_150220_room1_rock3.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>15:02</small>room3_rock</h3>
+<div class='grid'>
+<a href='img/2026-11-15_150238_room3_rock3.jpg'><img src='thumb/2026-11-15_150238_room3_rock3.jpg' alt='2026-11-15_150238_room3_rock3.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>15:19</small>stink_lob</h3>
+<div class='grid'>
+<a href='img/2026-11-15_151907_stink_lob.jpg'><img src='thumb/2026-11-15_151907_stink_lob.jpg' alt='2026-11-15_151907_stink_lob.jpg' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>16:21</small>audio_page</h3>
+<div class='grid'>
+<a href='img/2026-11-15_162138_audio_page.jpg'><img src='thumb/2026-11-15_162138_audio_page.jpg' alt='2026-11-15_162138_audio_page.jpg' loading='lazy'></a>
+</div></div>
+<details class='commits'><summary>49 commits that day</summary><ul>
+<li><span>00:23</span>Cave: copies beside a thing lift it, free copies follow at a distance, two walkers in room 1</li>
+<li><span>00:32</span>Config: lighter virtual shadow maps, after two graphics timeouts</li>
+<li><span>00:57</span>Cave: the idol can be thrown across room 1&#x27;s crevasse</li>
+<li><span>00:59</span>Docs: a checklist of what must be done before the build ships</li>
+<li><span>01:59</span>HUD: crew roster with portraits, and a rounder, eased radial menu</li>
+<li><span>02:14</span>HUD: hearts, idol worth, a toast for messages and an end-of-room card</li>
+<li><span>02:14</span>Docs: the HUD item on the ship checklist is done</li>
+<li><span>02:17</span>HUD: what the copies could do with the thing pointed at, and a mark where an order goes</li>
+<li><span>02:20</span>Cave: pointing at an icicle rings the floor it would crush</li>
+<li><span>02:20</span>Devlog: the HUD pass (portraits, roster, radial, status, end card)</li>
+<li><span>02:21</span>HUD: no helper or crosshair words once the room is ending</li>
+<li><span>02:39</span>HUD: heart pips, and an E / Q dock the radial grows out of</li>
+<li><span>02:46</span>Cave: any new order ends a copy&#x27;s task, dig-in, nap and dance</li>
+<li><span>02:57</span>HUD: a G prompt for grabbing and throwing copies, and G that takes the copy beside you</li>
+<li><span>03:04</span>Cave: items that show what they do</li>
+<li><span>03:06</span>Cave: Basher swings at a brute he stuns, and keeps his hammer when nothing was in reach</li>
+<li><span>10:52</span>Title screen: the crew in the cave, a frost logo, a menu with room select and a quality switch</li>
+<li><span>11:27</span>Pause menu with changeable keys; mouse look after the title fixed</li>
+<li><span>11:52</span>Idol throws 30% farther, mouse sensitivity in Controls, the name is SIX BEARDS DEEP</li>
+<li><span>12:26</span>Rooms 2 and 3 rebuilt: the Islands (throw your crew, reach the far lift) and the Gauntlet</li>
+<li><span>12:57</span>Rooms 2 and 3 after the first play: no thin ice, timed throws, doors creatures hold open</li>
+<li><span>13:13</span>Room 2 rebuilt as a hard lock; guards juke and dodge in attack mode; throw 5.5 m</li>
+<li><span>13:29</span>Guards fight smarter and take three blows; room 3&#x27;s brute survives to meet you; crystals guide</li>
+<li><span>13:31</span>Housekeeping: editor re-saves left uncommitted from earlier sessions</li>
+<li><span>13:39</span>Crystals guide room 1 too; lamps and crystals glow in the fog; a bolder grade</li>
+<li><span>14:01</span>Visuals: light shafts on the places that matter, characters lit to stand out, Lumen a step up</li>
+<li><span>14:13</span>Visuals: drawn light beams, embers rising from fires, glints round crystals</li>
+<li><span>14:19</span>Each room its own look: frost, crystal and amethyst biomes for rooms 1 to 3</li>
+<li><span>14:24</span>Frost on the rock: more snow on floors and ledges, a faint cold rim on rock edges</li>
+<li><span>14:39</span>The end screen after room 3 (the run&#x27;s ledger, the crew, back to the title); the guards&#x27; light dimmer</li>
+<li><span>14:45</span>Guards hear footsteps behind them (sprint, move, creep), still open to an ambush; VSM overflow notice off</li>
+<li><span>15:04</span>The rock painted: strata, big colour patches, dark ceilings, meltwater gloss, quieter bigger cobbles; narrator: heard, copy thrown, guard hit, more copy jokes and room 3 hints</li>
+<li><span>15:19</span>Bridges slide out, guards and the brute wind up a blow, the stink bomb and firework are thrown and seen to fly</li>
+<li><span>15:23</span>HUD: the standing list of every key along the bottom is gone; one dim line points to the pause menu&#x27;s controls</li>
+<li><span>15:35</span>HUD: the standing helper box is gone in rooms 1-3; an F dial in the dock (make a copy, how many left, dim at the limit); G&#x27;s dial moves left</li>
+<li><span>15:37</span>HUD: no radial pips on the F dial (only E and Q open a radial)</li>
+<li><span>15:56</span>The sound pass (ElevenLabs): the narrator&#x27;s 236 lines voiced, 31 sound effects hooked to the game, cave ambience, music for the title, rooms and the end</li>
+<li><span>16:07</span>Music settles 20% quieter after 10 s; menu sounds, flare and snore; guards on their guard fight back, 5 HP in a fight</li>
+<li><span>16:08</span>Untrack the old probe and import-log files committed by mistake (left on disk, as before)</li>
+<li><span>16:21</span>Audio settings: the pause menu&#x27;s Audio page (music, voices, sound effects), saved with the keys, applied through sound classes and one mix everywhere</li>
+<li><span>16:30</span>Performance sweep: measured (nothing egregious); light shafts and big crystal glows no longer cast shadows (virtual shadow map load)</li>
+<li><span>16:40</span>Ship prep: pixel-art icon (exe and page), window title Six Beards Deep, room 2&#x27;s leftover perf flag off, submission screenshots</li>
+<li><span>17:12</span>The jam video: 56 s cut to an ElevenLabs cue from recorded play, captions, narrator voice-over, title card; the recorder and the cut scripts</li>
+<li><span>17:20</span>Packaging: NNEDenoiser plugin off (unused neural denoiser and its ONNX/DirectML runtimes); builds staged without debug symbols: 726 MB -&gt; 414 MB</li>
+<li><span>17:22</span>Submission: itch.io page text, cover image; zips kept out of git</li>
+<li><span>17:24</span>itch page: solo entry (Solo Driver), credit line</li>
+<li><span>17:24</span>itch page: credits and form answers with the handle</li>
+<li><span>17:26</span>itch page: OpenAI and Tripo3D for the assets, nothing made before the jam, release status</li>
+<li><span>17:37</span>A plain gameplay cut for the submission form (the game&#x27;s own sound, no added music or voice-over); trailer tool: music and card optional</li>
+</ul></details>
+</section>
+<section class='day'><h2>The rooms on paper</h2>
+<div class='entry'><h3><small>den</small></h3>
+<div class='grid'>
+<a href='img/den.png'><img src='thumb/den.png' alt='den.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>heist</small></h3>
+<div class='grid'>
+<a href='img/heist.png'><img src='thumb/heist.png' alt='heist.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>hoard</small></h3>
+<div class='grid'>
+<a href='img/hoard.png'><img src='thumb/hoard.png' alt='hoard.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>jam0</small></h3>
+<div class='grid'>
+<a href='img/jam0.png'><img src='thumb/jam0.png' alt='jam0.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>jam1</small></h3>
+<div class='grid'>
+<a href='img/jam1.png'><img src='thumb/jam1.png' alt='jam1.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>jam2</small></h3>
+<div class='grid'>
+<a href='img/jam2.png'><img src='thumb/jam2.png' alt='jam2.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>jam3</small></h3>
+<div class='grid'>
+<a href='img/jam3.png'><img src='thumb/jam3.png' alt='jam3.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>slice</small></h3>
+<div class='grid'>
+<a href='img/slice.png'><img src='thumb/slice.png' alt='slice.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>vault</small></h3>
+<div class='grid'>
+<a href='img/vault.png'><img src='thumb/vault.png' alt='vault.png' loading='lazy'></a>
+</div></div>
+<div class='entry'><h3><small>yard</small></h3>
+<div class='grid'>
+<a href='img/yard.png'><img src='thumb/yard.png' alt='yard.png' loading='lazy'></a>
+</div></div>
+</section>
+</main><footer>Six Beards Deep: made solo by llericop, directing an AI crew, for the 2026 Epic AI MegaJam (theme: Director's Cut).</footer></body></html>
